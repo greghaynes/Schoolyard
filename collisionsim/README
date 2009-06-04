@@ -1,0 +1,9 @@
+PyCollisionSim
+--------------------------
+
+Graphical Collision Simulator
+
+To run the collision simulator, you must have the following installed:
+ - PyQt4
+
+You can then execute python collisionsim.py in a terminal to start the application.
