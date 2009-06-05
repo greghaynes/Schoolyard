@@ -24,7 +24,7 @@ def doLinesIntersect(pointa, dva, pointb, dvb):
 
 # Represents a vector and caches properties of the vector
 class Vector:
-	def __init__(x=0, y=0):
+	def __init__(self, x=0, y=0):
 		self.xVal = x
 		self.yVal = y
 		self.resetMagnitude()
@@ -50,7 +50,7 @@ class Vector:
 		if not self.directionSet:
 			if self.magnitude() == 0:
 				return False
-			else
+			else:
 				self.directionVal = Vector(self.x() / self.magnitude(), self.y() / self.magnitude())
 				self.directionSet = True
 		return self.directionVal
@@ -61,23 +61,34 @@ class Vector:
 		self.directionSet = False
 		self.direction = 0
 
-class CollidableCircle(QtGui.QGraphicsEllipseItem):
-	def __init__(self, center, radius, mass, velocity=Vector(), parent=None, scene=None):
-		QtGui.QGraphicsEllipseItem.__init__(self, parent, scene)
-		rect = QtCore.QRectF(center.x()-radius, center.y()-radius, center.x()+radius, center.y()+radius)
-		self.radius = radius
+class CollidableObject:
+	'Parent class for collidable objects.  You want to instanciate a subclass.'
+	def __init__(self, mass, velocity):
 		self.mass = mass
 		self.setVelocity(velocity)
-	def moveStep(self):
-		pass
 	def velocity(self):
 		return self.velocityVal
 	def setVelocity(self, velocity):
 		self.velocityVal = velocity
 
+class CollidableCircle(QtGui.QGraphicsEllipseItem, CollidableObject):
+	def __init__(self, center, radius, mass, velocity=Vector(), parent=None, scene=None):
+		QtGui.QGraphicsEllipseItem.__init__(self, parent, scene)
+		CollidableObject.__init__(self, mass, velocity)
+		rect = QtCore.QRectF(0, 0, 2*radius, 2*radius)
+		self.setRect(rect)
+		self.setPos(center)
+		self.radius = radius
+		self.mass = mass
+		self.setVelocity(velocity)
+	def moveStep(self):
+		pass
+
 # Contains all objects and controls simulation
 class Field(QtGui.QGraphicsScene):
 	def __init__(self, parent=None):
 		QtGui.QGraphicsScene.__init__(self, parent)
+	def addObject(self, object):
+		self.addItem(object)
 	def timeSlice(self):
 		pass

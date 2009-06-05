@@ -17,9 +17,16 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-from PyQt4 import QtGui
+from PyQt4 import QtCore, QtGui
+from physics import Field, CollidableCircle
 
 # CollisionSimulator window
 class MainWindow(QtGui.QMainWindow):
 	def __init__(self):
 		QtGui.QMainWindow.__init__(self)
+		self.field = Field(self)
+		view = QtGui.QGraphicsView(self.field, self)
+		self.setCentralWidget(view)
+		self.resize(600, 600)
+		view.adjustSize()
+		circle1 = CollidableCircle(QtCore.QPointF(0, 0), 150, 1, scene=self.field)
