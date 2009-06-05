@@ -17,7 +17,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-from PyQt4 import QtGui
+from PyQt4 import QtCore, QtGui
 
 def doLinesIntersect(pointa, dva, pointb, dvb):
 	pass
@@ -61,14 +61,19 @@ class Vector:
 		self.directionSet = False
 		self.direction = 0
 
-class CollidableObject(QtGui.QGraphicsItem):
-	def __init__(self, velocity=Vector(), parent=None, scene=None):
-		QtGui.QGraphicsItem.__init__(self, parent, scene)
-		self.velocity = velocity
+class CollidableCircle(QtGui.QGraphicsEllipseItem):
+	def __init__(self, center, radius, mass, velocity=Vector(), parent=None, scene=None):
+		QtGui.QGraphicsEllipseItem.__init__(self, parent, scene)
+		rect = QtCore.QRectF(center.x()-radius, center.y()-radius, center.x()+radius, center.y()+radius)
+		self.radius = radius
+		self.mass = mass
+		self.setVelocity(velocity)
 	def moveStep(self):
 		pass
-	def collidesWith(self, otherObject):
-		pass
+	def velocity(self):
+		return self.velocityVal
+	def setVelocity(self, velocity):
+		self.velocityVal = velocity
 
 # Contains all objects and controls simulation
 class Field(QtGui.QGraphicsScene):
