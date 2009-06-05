@@ -88,7 +88,11 @@ class CollidableCircle(QtGui.QGraphicsEllipseItem, CollidableObject):
 class Field(QtGui.QGraphicsScene):
 	def __init__(self, parent=None):
 		QtGui.QGraphicsScene.__init__(self, parent)
-	def addObject(self, object):
-		self.addItem(object)
+	def start(self):
+		self.timer = QtCore.QTimer(self)
+		self.timer.setSingleShot(False)
+		self.timer.setInterval(100)
+		self.connect(self.timer, QtCore.SIGNAL('timeout()'), self.timeSlice)
+		self.timer.start()
 	def timeSlice(self):
 		pass

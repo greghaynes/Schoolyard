@@ -25,8 +25,11 @@ class MainWindow(QtGui.QMainWindow):
 	def __init__(self):
 		QtGui.QMainWindow.__init__(self)
 		self.field = Field(self)
+		self.resize(600, 600)
 		view = QtGui.QGraphicsView(self.field, self)
 		self.setCentralWidget(view)
-		self.resize(600, 600)
 		view.adjustSize()
-		circle1 = CollidableCircle(QtCore.QPointF(0, 0), 150, 1, scene=self.field)
+		self.startSimAction = QtGui.QAction('Start Simulation', self)
+		self.connect(self.startSimAction, QtCore.SIGNAL('triggered()'), self.field.start)
+		self.fileMenu = self.menuBar().addMenu('File')
+		self.fileMenu.addAction(self.startSimAction)
