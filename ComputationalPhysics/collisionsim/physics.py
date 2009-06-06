@@ -70,6 +70,8 @@ class CollidableObject:
 		return self.velocityVal
 	def setVelocity(self, velocity):
 		self.velocityVal = velocity
+	def isCollidingWith(self, otherItem):
+		return False
 
 class CollidableCircle(QtGui.QGraphicsEllipseItem, CollidableObject):
 	def __init__(self, center, radius, mass, velocity=Vector(), parent=None, scene=None):
@@ -88,11 +90,44 @@ class CollidableCircle(QtGui.QGraphicsEllipseItem, CollidableObject):
 class Field(QtGui.QGraphicsScene):
 	def __init__(self, parent=None):
 		QtGui.QGraphicsScene.__init__(self, parent)
+		self.isRunningVal = False
+		self.isPausedVal = False
+		self.elasticCollisionsVal = False
+		self.collisionFunction = self.inelasticCollision
+	def isRunning(self):
+		return self.isRunningVal
+	def elasticCollisions(self):
+		return self.elasticCollisionsVal
+	def setElasticCollitions(self, value):
+		if value == True:
+			self.collisionFunction = self.elasticCollision
+		elif value == False:
+			self.collisionFunction = self.inelasticCollision
+		self.elasticCollisionsVal = value
 	def start(self):
-		self.timer = QtCore.QTimer(self)
-		self.timer.setSingleShot(False)
-		self.timer.setInterval(100)
-		self.connect(self.timer, QtCore.SIGNAL('timeout()'), self.timeSlice)
-		self.timer.start()
+		if self.isRunning():
+			return False
+		else:
+			self.isRunningVal = True
+			self.timer = QtCore.QTimer(self)
+			self.timer.setSingleShot(False)
+			self.timer.setInterval(100)
+			self.connect(self.timer, QtCore.SIGNAL('timeout()'), self.timeSlice)
+			self.timer.start()
+			self.emit(QtCore.SIGNAL('started()'))
+			return True
+	def stop(self):
+		pass
 	def timeSlice(self):
+		'Each step do collision detection with every compination of two objects'
+		'If they are colliding set the items speed apropriately.'
+		itemList = self.items()
+		for item in itemList:
+			for otherItem in itemList:
+				if item.isCollidingWith(otherItem):
+					pass
+	def elasticCollision(object, otherObject):
+		'Sets object to have velocity of colliding with otherObject'
+		pass
+	def inelasticCollision(object, otherObject):
 		pass

@@ -25,11 +25,26 @@ class MainWindow(QtGui.QMainWindow):
 	def __init__(self):
 		QtGui.QMainWindow.__init__(self)
 		self.field = Field(self)
+		self.connect(self.field, QtCore.SIGNAL('started()'), self.simulationStarted)
+		# window settings
 		self.resize(600, 600)
+		self.setWindowTitle('Collision Simulator')
 		view = QtGui.QGraphicsView(self.field, self)
 		self.setCentralWidget(view)
 		view.adjustSize()
-		self.startSimAction = QtGui.QAction('Start Simulation', self)
+		# actions
+		self.startSimAction = QtGui.QAction('Start', self)
 		self.connect(self.startSimAction, QtCore.SIGNAL('triggered()'), self.field.start)
+		self.stopSimAction = QtGui.QAction('Stop', self)
+		self.stopSimAction.setEnabled(False)
+		self.connect(self.stopSimAction, QtCore.SIGNAL('triggered()'), self.field.stop)
+		# menus
 		self.fileMenu = self.menuBar().addMenu('File')
 		self.fileMenu.addAction(self.startSimAction)
+		self.fileMenu.addAction(self.stopSimAction)
+	def simulationStarted(self):
+		self.startSimAction.setEnabled(False)
+		self.stopSimAction.setEnabled(True)
+	def simulationEnded(self):
+		self.startSimAction.setEnabled(True)
+		self.stopSimAction.setEnabled(False)
