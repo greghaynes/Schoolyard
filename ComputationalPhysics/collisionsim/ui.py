@@ -20,6 +20,50 @@
 from PyQt4 import QtCore, QtGui
 from physics import Field, CollidableCircle
 
+# Add Object dialog
+class CreateObjectWidget(QtGui.QDialog):
+	def __init__(self, parent=None):
+		QtGui.QDialog.__init__(self, parent)
+		self.setWindowTitle('Create Object')
+		self.xEdit = QtGui.QLineEdit()
+		self.yEdit = QtGui.QLineEdit()
+		self.xVelEdit = QtGui.QLineEdit()
+		self.yVelEdit = QtGui.QLineEdit()
+		self.radiusEdit = QtGui.QLineEdit()
+		self.massEdit = QtGui.QLineEdit()
+		locationLabel = QtGui.QLabel('Location')
+		xLabel = QtGui.QLabel('X:')
+		yLabel = QtGui.QLabel('Y:')
+		xVelLabel = QtGui.QLabel('X:')
+		yVelLabel = QtGui.QLabel('Y:')
+		velocityLabel = QtGui.QLabel('Velocity')
+		radiusLabel = QtGui.QLabel('Radius:')
+		massLabel = QtGui.QLabel('Mass:')
+		layout = QtGui.QGridLayout()
+		layout.addWidget(locationLabel, 0, 0)
+		layout.addWidget(xLabel, 1, 0)
+		layout.addWidget(self.xEdit, 1, 1)
+		layout.addWidget(yLabel, 2, 0)
+		layout.addWidget(self.yEdit, 2, 1)
+		layout.addWidget(velocityLabel, 3, 0)
+		layout.addWidget(xVelLabel, 4, 0)
+		layout.addWidget(self.xVelEdit, 4, 1)
+		layout.addWidget(yVelLabel, 5, 0)
+		layout.addWidget(self.yVelEdit, 5, 1)
+		layout.addWidget(radiusLabel, 6, 0)
+		layout.addWidget(self.radiusEdit, 6, 1)
+		layout.addWidget(massLabel, 7, 0)
+		layout.addWidget(self.massEdit, 7, 1)
+		self.okButton = QtGui.QPushButton('Ok')
+		self.connect(self.okButton, QtCore.SIGNAL('clicked(bool)'), self.accept)
+		self.cancelButton = QtGui.QPushButton('Cancel')
+		self.connect(self.cancelButton, QtCore.SIGNAL('clicked(bool)'), self.close)
+		buttonLayout = QtGui.QHBoxLayout()
+		buttonLayout.addWidget(self.cancelButton)
+		buttonLayout.addWidget(self.okButton)
+		layout.addLayout(buttonLayout, 8, 1)
+		self.setLayout(layout)
+
 # CollisionSimulator window
 class MainWindow(QtGui.QMainWindow):
 	def __init__(self):
@@ -38,13 +82,21 @@ class MainWindow(QtGui.QMainWindow):
 		self.stopSimAction = QtGui.QAction('Stop', self)
 		self.stopSimAction.setEnabled(False)
 		self.connect(self.stopSimAction, QtCore.SIGNAL('triggered()'), self.field.stop)
+		self.addObjectAction = QtGui.QAction('Add Object', self)
+		self.connect(self.addObjectAction, QtCore.SIGNAL('triggered()'), self.createObject)
 		# menus
 		self.fileMenu = self.menuBar().addMenu('File')
 		self.fileMenu.addAction(self.startSimAction)
 		self.fileMenu.addAction(self.stopSimAction)
+		self.editMenu = self.menuBar().addMenu('Edit')
+		self.editMenu.addAction(self.addObjectAction)
 	def simulationStarted(self):
 		self.startSimAction.setEnabled(False)
 		self.stopSimAction.setEnabled(True)
 	def simulationEnded(self):
 		self.startSimAction.setEnabled(True)
 		self.stopSimAction.setEnabled(False)
+	def createObject(self):
+		widget = CreateObjectWidget(self)
+		if widget.exec_():
+			loc = QtCore.QPointF(float(widget.xEdit.text()), float(widget.yEdit.text()))
