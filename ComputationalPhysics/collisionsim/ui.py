@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 from PyQt4 import QtCore, QtGui
-from physics import Field, CollidableCircle
+from physics import Field, CollidableCircle, Vector
 
 # Add Object dialog
 class CreateObjectWidget(QtGui.QDialog):
@@ -99,4 +99,9 @@ class MainWindow(QtGui.QMainWindow):
 	def createObject(self):
 		widget = CreateObjectWidget(self)
 		if widget.exec_():
-			loc = QtCore.QPointF(float(widget.xEdit.text()), float(widget.yEdit.text()))
+			if widget.xEdit.text().isEmpty() or widget.yEdit.text().isEmpty() or widget.yVelEdit.text().isEmpty() or widget.xVelEdit.text().isEmpty():
+				return False
+			else:
+				loc = QtCore.QPointF(float(widget.xEdit.text()), float(widget.yEdit.text()))
+				vel = Vector(float(widget.xVelEdit.text()), float(widget.yVelEdit.text()))
+				newObj = CollidableCircle(loc, float(widget.radiusEdit.text()), float(widget.massEdit.text()), vel, None, self.field)
