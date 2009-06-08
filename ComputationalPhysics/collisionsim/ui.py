@@ -21,6 +21,17 @@ import qrc
 from PyQt4 import QtCore, QtGui
 from physics import Field, CollidableCircle, Vector
 
+class AboutData(QtGui.QDialog):
+	def __init__(self, parent=None):
+		QtGui.QDialog.__init__(self, parent)
+		self.setWindowTitle('About PyCollisionSim')
+		label = QtGui.QLabel('<h2>PyCollisionSim</h2>\n' +
+			'Created by Gregory Haynes<br>' +
+			'Copyright 2009 Gregory Haynes<br>' +
+			'Licensed under the GNU Public License (v2)')
+		layout = QtGui.QVBoxLayout(self)
+		layout.addWidget(label)
+
 # Add Object dialog
 class CreateObjectWidget(QtGui.QDialog):
 	def __init__(self, parent=None):
@@ -92,6 +103,8 @@ class MainWindow(QtGui.QMainWindow):
 		self.exitAction = QtGui.QAction('Exit', self)
 		self.exitAction.setIcon(QtGui.QIcon(':/icons/exit.png'))
 		self.connect(self.exitAction, QtCore.SIGNAL('triggered()'), QtCore.SLOT('close()'))
+		self.aboutAction = QtGui.QAction('About', self)
+		self.connect(self.aboutAction, QtCore.SIGNAL('triggered()'), self.aboutData)
 		# menus
 		self.fileMenu = self.menuBar().addMenu('File')
 		self.fileMenu.addAction(self.startSimAction)
@@ -100,6 +113,8 @@ class MainWindow(QtGui.QMainWindow):
 		self.fileMenu.addAction(self.exitAction)
 		self.editMenu = self.menuBar().addMenu('Edit')
 		self.editMenu.addAction(self.addObjectAction)
+		self.helpMenu = self.menuBar().addMenu('Help')
+		self.helpMenu.addAction(self.aboutAction)
 		# toolbar
 		self.toolbar = self.addToolBar('Control')
 		self.toolbar.addAction(self.startSimAction)
@@ -121,7 +136,10 @@ class MainWindow(QtGui.QMainWindow):
 				loc = QtCore.QPointF(float(widget.xEdit.text()), float(widget.yEdit.text()))
 				vel = Vector(float(widget.xVelEdit.text()), float(widget.yVelEdit.text()))
 				newObj = CollidableCircle(loc, float(widget.radiusEdit.text()), float(widget.massEdit.text()), vel, None, self.field)
-				debugObj(newObj)
+				# debugObj(newObj)
+	def aboutData(self):
+		widget = AboutData(self)
+		widget.exec_()
 
 def debugObj(obj):
 	vel = obj.velocity()
