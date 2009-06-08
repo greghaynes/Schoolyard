@@ -26,9 +26,9 @@ class AboutData(QtGui.QDialog):
 		QtGui.QDialog.__init__(self, parent)
 		self.setWindowTitle('About PyCollisionSim')
 		label = QtGui.QLabel('<h2>PyCollisionSim</h2>\n' +
-			'Created by Gregory Haynes<br>' +
-			'Copyright 2009 Gregory Haynes<br>' +
-			'Licensed under the GNU Public License (v2)')
+			'Created by Gregory Haynes.<br>' +
+			'Copyright 2009 Gregory Haynes.<br>' +
+			'Licensed under the GNU Public License (v2).')
 		layout = QtGui.QVBoxLayout(self)
 		layout.addWidget(label)
 
@@ -100,6 +100,8 @@ class MainWindow(QtGui.QMainWindow):
 		self.addObjectAction = QtGui.QAction('Add Object', self)
 		self.addObjectAction.setIcon(QtGui.QIcon(':/icons/add.png'))
 		self.connect(self.addObjectAction, QtCore.SIGNAL('triggered()'), self.createObject)
+		self.chickenExampleAction = QtGui.QAction('Chicken', self)
+		self.connect(self.chickenExampleAction, QtCore.SIGNAL('triggered()'), self.chickenExample)
 		self.exitAction = QtGui.QAction('Exit', self)
 		self.exitAction.setIcon(QtGui.QIcon(':/icons/exit.png'))
 		self.connect(self.exitAction, QtCore.SIGNAL('triggered()'), QtCore.SLOT('close()'))
@@ -113,6 +115,8 @@ class MainWindow(QtGui.QMainWindow):
 		self.fileMenu.addAction(self.exitAction)
 		self.editMenu = self.menuBar().addMenu('Edit')
 		self.editMenu.addAction(self.addObjectAction)
+		self.exampleMenu = self.menuBar().addMenu('Examples')
+		self.exampleMenu.addAction(self.chickenExampleAction)
 		self.helpMenu = self.menuBar().addMenu('Help')
 		self.helpMenu.addAction(self.aboutAction)
 		# toolbar
@@ -140,6 +144,9 @@ class MainWindow(QtGui.QMainWindow):
 	def aboutData(self):
 		widget = AboutData(self)
 		widget.exec_()
+	def chickenExample(self):
+		obj = CollidableCircle(QtCore.QPointF(-100, 0), 5, 5, Vector(10, 0), None, self.field)
+		obj2 = CollidableCircle(QtCore.QPointF(100, 0), 5, 5, Vector(-10, 0), None, self.field)
 
 def debugObj(obj):
 	vel = obj.velocity()

@@ -91,6 +91,16 @@ class CollidableCircle(QtGui.QGraphicsEllipseItem, CollidableObject):
 		self.setVelocity(velocity)
 	def moveStep(self):
 		pass
+	def isCollidingWith(self, otherCircle):
+		pos = self.pos()
+		otherpos = otherCircle.pos()
+		distsq = (pos.x() - otherpos.x())**2 + (pos.y() + otherpos.y())**2
+		radsumsq = self.radius**2 + otherCircle.radius**2
+		# print str(distsq) + ', ' + str(radsumsq)
+		if distsq <= radsumsq:
+			return True
+		else:
+			return False
 
 # Contains all objects and controls simulation
 class Field(QtGui.QGraphicsScene):
@@ -133,12 +143,13 @@ class Field(QtGui.QGraphicsScene):
 		itemList = self.items()
 		for item in itemList:
 			for otherItem in itemList:
-				if item.isCollidingWith(otherItem):
+				if item != otherItem and item.isCollidingWith(otherItem):
+					print 'Collision!'
 					self.collisionFunction(item, otherItem)
 		for item in itemList:
 			item.step(self.stepSize)
-	def elasticCollision(object, otherObject):
+	def elasticCollision(self, object, otherObject):
 		'Sets object to have velocity of colliding with otherObject'
 		pass
-	def inelasticCollision(object, otherObject):
+	def inelasticCollision(self, object, otherObject):
 		pass
