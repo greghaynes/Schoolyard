@@ -88,12 +88,23 @@ class MainWindow(QtGui.QMainWindow):
 		self.addObjectAction = QtGui.QAction('Add Object', self)
 		self.addObjectAction.setIcon(QtGui.QIcon(':/icons/add.png'))
 		self.connect(self.addObjectAction, QtCore.SIGNAL('triggered()'), self.createObject)
+		self.exitAction = QtGui.QAction('Exit', self)
+		self.exitAction.setIcon(QtGui.QIcon(':/icons/exit.png'))
+		self.connect(self.exitAction, QtCore.SIGNAL('triggered()'), QtCore.SLOT('close()'))
 		# menus
 		self.fileMenu = self.menuBar().addMenu('File')
 		self.fileMenu.addAction(self.startSimAction)
 		self.fileMenu.addAction(self.stopSimAction)
+		self.fileMenu.addSeparator()
+		self.fileMenu.addAction(self.exitAction)
 		self.editMenu = self.menuBar().addMenu('Edit')
 		self.editMenu.addAction(self.addObjectAction)
+		# toolbar
+		self.toolbar = self.addToolBar('Control')
+		self.toolbar.addAction(self.startSimAction)
+		self.toolbar.addAction(self.stopSimAction)
+		self.toolbar = self.addToolBar('Edit')
+		self.toolbar.addAction(self.addObjectAction)
 	def simulationStarted(self):
 		self.startSimAction.setEnabled(False)
 		self.stopSimAction.setEnabled(True)
