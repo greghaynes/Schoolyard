@@ -92,18 +92,16 @@ class Field(QtGui.QGraphicsScene):
 		QtGui.QGraphicsScene.__init__(self, parent)
 		self.isRunningVal = False
 		self.isPausedVal = False
-		self.elasticCollisionsVal = False
 		self.collisionFunction = self.inelasticCollision
 	def isRunning(self):
 		return self.isRunningVal
 	def elasticCollisions(self):
-		return self.elasticCollisionsVal
+		return self.collisionFunction == self.elasticCollision
 	def setElasticCollitions(self, value):
 		if value == True:
 			self.collisionFunction = self.elasticCollision
 		elif value == False:
 			self.collisionFunction = self.inelasticCollision
-		self.elasticCollisionsVal = value
 	def start(self):
 		if self.isRunning():
 			return False
@@ -117,7 +115,10 @@ class Field(QtGui.QGraphicsScene):
 			self.emit(QtCore.SIGNAL('started()'))
 			return True
 	def stop(self):
-		pass
+		if self.isRunning():
+			self.timer.stop()
+			self.isRunningVal = False
+			self.isPausedVal = False
 	def timeSlice(self):
 		'Each step do collision detection with every compination of two objects'
 		'If they are colliding set the items speed apropriately.'
@@ -125,9 +126,9 @@ class Field(QtGui.QGraphicsScene):
 		for item in itemList:
 			for otherItem in itemList:
 				if item.isCollidingWith(otherItem):
-					pass
+					self.collisionFunction(item, otherItem)
 	def elasticCollision(object, otherObject):
 		'Sets object to have velocity of colliding with otherObject'
 		pass
 	def inelasticCollision(object, otherObject):
-		pass
+		
