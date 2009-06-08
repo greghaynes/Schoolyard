@@ -71,6 +71,7 @@ class MainWindow(QtGui.QMainWindow):
 		QtGui.QMainWindow.__init__(self)
 		self.field = Field(self)
 		self.connect(self.field, QtCore.SIGNAL('started()'), self.simulationStarted)
+		self.connect(self.field, QtCore.SIGNAL('stopped()'), self.simulationEnded)
 		# window settings
 		self.resize(600, 600)
 		self.setWindowTitle('Collision Simulator')
@@ -120,3 +121,8 @@ class MainWindow(QtGui.QMainWindow):
 				loc = QtCore.QPointF(float(widget.xEdit.text()), float(widget.yEdit.text()))
 				vel = Vector(float(widget.xVelEdit.text()), float(widget.yVelEdit.text()))
 				newObj = CollidableCircle(loc, float(widget.radiusEdit.text()), float(widget.massEdit.text()), vel, None, self.field)
+				debugObj(newObj)
+
+def debugObj(obj):
+	vel = obj.velocity()
+	print 'vel: [' + str(vel.x()) + ', ' + str(vel.y()) + ']'

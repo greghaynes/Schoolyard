@@ -72,9 +72,15 @@ class CollidableObject:
 		self.velocityVal = velocity
 	def isCollidingWith(self, otherItem):
 		return False
+	def step(self, stepSize):
+		vel = self.velocity()
+		dx = float(vel.x()) * stepSize
+		dy = float(vel.y()) * stepSize
+		# print 'moving [' + str(dx) + ', ' + str(dy) + ']'
+		self.moveBy(dx, dy)
 
 class CollidableCircle(QtGui.QGraphicsEllipseItem, CollidableObject):
-	def __init__(self, center, radius, mass, velocity=Vector(), parent=None, scene=None):
+	def __init__(self, center, radius, mass, velocity, parent=None, scene=None):
 		QtGui.QGraphicsEllipseItem.__init__(self, parent, scene)
 		CollidableObject.__init__(self, mass, velocity)
 		rect = QtCore.QRectF(0, 0, 2*radius, 2*radius)
@@ -93,6 +99,7 @@ class Field(QtGui.QGraphicsScene):
 		self.isRunningVal = False
 		self.isPausedVal = False
 		self.collisionFunction = self.inelasticCollision
+		self.stepSize = .05
 	def isRunning(self):
 		return self.isRunningVal
 	def elasticCollisions(self):
@@ -109,7 +116,7 @@ class Field(QtGui.QGraphicsScene):
 			self.isRunningVal = True
 			self.timer = QtCore.QTimer(self)
 			self.timer.setSingleShot(False)
-			self.timer.setInterval(100)
+			self.timer.setInterval(self.stepSize**-1)
 			self.connect(self.timer, QtCore.SIGNAL('timeout()'), self.timeSlice)
 			self.timer.start()
 			self.emit(QtCore.SIGNAL('started()'))
@@ -119,6 +126,7 @@ class Field(QtGui.QGraphicsScene):
 			self.timer.stop()
 			self.isRunningVal = False
 			self.isPausedVal = False
+			self.emit(QtCore.SIGNAL('stopped()'))
 	def timeSlice(self):
 		'Each step do collision detection with every compination of two objects'
 		'If they are colliding set the items speed apropriately.'
@@ -127,6 +135,8 @@ class Field(QtGui.QGraphicsScene):
 			for otherItem in itemList:
 				if item.isCollidingWith(otherItem):
 					self.collisionFunction(item, otherItem)
+		for item in itemList:
+			item.step(self.stepSize)
 	def elasticCollision(object, otherObject):
 		'Sets object to have velocity of colliding with otherObject'
 		pass
