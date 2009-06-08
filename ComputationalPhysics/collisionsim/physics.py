@@ -131,4 +131,4 @@ class Field(QtGui.QGraphicsScene):
 		'Sets object to have velocity of colliding with otherObject'
 		pass
 	def inelasticCollision(object, otherObject):
-		
+		pass

@@ -17,6 +17,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import qrc
 from PyQt4 import QtCore, QtGui
 from physics import Field, CollidableCircle, Vector
 
@@ -78,11 +79,14 @@ class MainWindow(QtGui.QMainWindow):
 		view.adjustSize()
 		# actions
 		self.startSimAction = QtGui.QAction('Start', self)
+		self.startSimAction.setIcon(QtGui.QIcon(':/icons/start.png'))
 		self.connect(self.startSimAction, QtCore.SIGNAL('triggered()'), self.field.start)
 		self.stopSimAction = QtGui.QAction('Stop', self)
 		self.stopSimAction.setEnabled(False)
+		self.stopSimAction.setIcon(QtGui.QIcon(':/icons/stop.png'))
 		self.connect(self.stopSimAction, QtCore.SIGNAL('triggered()'), self.field.stop)
 		self.addObjectAction = QtGui.QAction('Add Object', self)
+		self.addObjectAction.setIcon(QtGui.QIcon(':/icons/add.png'))
 		self.connect(self.addObjectAction, QtCore.SIGNAL('triggered()'), self.createObject)
 		# menus
 		self.fileMenu = self.menuBar().addMenu('File')
