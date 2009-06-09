@@ -148,7 +148,7 @@ class Field(QtGui.QGraphicsScene):
 		for item in itemList:
 			for otherItem in itemList[i:]:
 				if item != otherItem and item.isCollidingWith(otherItem):
-					print 'Collision!'
+					# print 'Collision!'
 					self.collisionFunction(item, otherItem)
 			i += 1
 		for item in itemList:
@@ -159,6 +159,7 @@ class Field(QtGui.QGraphicsScene):
 	def inelasticCollision(self, object, otherObject):
 		if object.colliders.has_key(otherObject):
 			return
+		print 'Collision!'
 		xmag = object.velocity().x() + otherObject.velocity().x()
 		ymag = object.velocity().y() + otherObject.velocity().y()
 		for update in object.colliders:
