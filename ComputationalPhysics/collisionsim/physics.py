@@ -66,6 +66,7 @@ class CollidableObject:
 	def __init__(self, mass, velocity):
 		self.mass = mass
 		self.setVelocity(velocity)
+		self.colliders = {}
 	def velocity(self):
 		return self.velocityVal
 	def setVelocity(self, velocity):
@@ -74,10 +75,13 @@ class CollidableObject:
 		return False
 	def step(self, stepSize):
 		vel = self.velocity()
-		dx = float(vel.x()) * stepSize
-		dy = float(vel.y()) * stepSize
+		dx = vel.x() * stepSize
+		dy = vel.y() * stepSize
 		# print 'moving [' + str(dx) + ', ' + str(dy) + ']'
-		self.moveBy(dx, dy)
+		if dx != 0 or dy != 0:
+			self.moveBy(dx, dy)
+	def momentum(self):
+		return self.velocity().magnitude() * self.mass
 
 class CollidableCircle(QtGui.QGraphicsEllipseItem, CollidableObject):
 	def __init__(self, center, radius, mass, velocity, parent=None, scene=None):
@@ -89,11 +93,10 @@ class CollidableCircle(QtGui.QGraphicsEllipseItem, CollidableObject):
 		self.radius = radius
 		self.mass = mass
 		self.setVelocity(velocity)
-	def moveStep(self):
-		pass
 	def isCollidingWith(self, otherCircle):
 		pos = self.pos()
 		otherpos = otherCircle.pos()
+		# Well leave as sqares because sqroot's are slow
 		distsq = (pos.x() - otherpos.x())**2 + (pos.y() + otherpos.y())**2
 		radsumsq = self.radius**2 + otherCircle.radius**2
 		# print str(distsq) + ', ' + str(radsumsq)
@@ -109,7 +112,7 @@ class Field(QtGui.QGraphicsScene):
 		self.isRunningVal = False
 		self.isPausedVal = False
 		self.collisionFunction = self.inelasticCollision
-		self.stepSize = .05
+		self.stepSize = .08
 	def isRunning(self):
 		return self.isRunningVal
 	def elasticCollisions(self):
@@ -138,18 +141,38 @@ class Field(QtGui.QGraphicsScene):
 			self.isPausedVal = False
 			self.emit(QtCore.SIGNAL('stopped()'))
 	def timeSlice(self):
-		'Each step do collision detection with every compination of two objects'
+		'Each step do collision detection with every combination of two objects'
 		'If they are colliding set the items speed apropriately.'
 		itemList = self.items()
+		i = 0
 		for item in itemList:
-			for otherItem in itemList:
+			for otherItem in itemList[i:]:
 				if item != otherItem and item.isCollidingWith(otherItem):
 					print 'Collision!'
 					self.collisionFunction(item, otherItem)
+			i += 1
 		for item in itemList:
 			item.step(self.stepSize)
 	def elasticCollision(self, object, otherObject):
 		'Sets object to have velocity of colliding with otherObject'
 		pass
 	def inelasticCollision(self, object, otherObject):
-		pass
+		if object.colliders.has_key(otherObject):
+			return
+		xmag = object.velocity().x() + otherObject.velocity().x()
+		ymag = object.velocity().y() + otherObject.velocity().y()
+		for update in object.colliders:
+			if not otherObject.colliders.has_key(update):
+				otherObject.colliders[update] = True
+		for update in otherObject.colliders:
+			if not object.colliders.has_key(update):
+				object.colliders[update] = True
+		object.colliders[otherObject] = True
+		otherObject.colliders[object] = True
+		combmass = object.mass
+		for update in object.colliders:
+			combmass += update.mass
+		resVel = Vector(float(xmag) / combmass, float(ymag) / combmass)
+		object.setVelocity(resVel)
+		for update in object.colliders:
+			update.setVelocity(resVel)
