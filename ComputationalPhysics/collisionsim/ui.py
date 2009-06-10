@@ -107,6 +107,8 @@ class MainWindow(QtGui.QMainWindow):
 		self.connect(self.chickenExampleAction, QtCore.SIGNAL('triggered()'), self.chickenExample)
 		self.ricochet3ExampleAction = QtGui.QAction('3 object ricochet', self)
 		self.connect(self.ricochet3ExampleAction, QtCore.SIGNAL('triggered()'), self.ricochet3)
+		self.triangleExampleAction = QtGui.QAction('2 Object triange', self)
+		self.connect(self.triangleExampleAction, QtCore.SIGNAL('triggered()'), self.triangle2)
 		self.exitAction = QtGui.QAction('Exit', self)
 		self.exitAction.setIcon(QtGui.QIcon(':/icons/exit.png'))
 		self.connect(self.exitAction, QtCore.SIGNAL('triggered()'), QtCore.SLOT('close()'))
@@ -124,6 +126,7 @@ class MainWindow(QtGui.QMainWindow):
 		self.exampleMenu = self.menuBar().addMenu('Examples')
 		self.exampleMenu.addAction(self.chickenExampleAction)
 		self.exampleMenu.addAction(self.ricochet3ExampleAction)
+		self.exampleMenu.addAction(self.triangleExampleAction)
 		self.helpMenu = self.menuBar().addMenu('Help')
 		self.helpMenu.addAction(self.aboutAction)
 		# toolbar
@@ -160,7 +163,9 @@ class MainWindow(QtGui.QMainWindow):
 		obj1 = CollidableCircle(QtCore.QPointF(-100, 0), 5, 5, Vector(0, 0), None, self.field)
 		obj2 = CollidableCircle(QtCore.QPointF(0, 0), 5, 5, Vector(3, 0), None, self.field)
 		obj3 = CollidableCircle(QtCore.QPointF(100, 0), 5, 5, Vector(-20, 0), None, self.field)
-
+	def triangle2(self):
+		obj1 = CollidableCircle(QtCore.QPointF(-100, -100), 5, 5, Vector(10, 10), None, self.field)
+		obj2 = CollidableCircle(QtCore.QPointF(100, -100), 5, 5, Vector(-10, 10), None, self.field)
 def debugObj(obj):
 	vel = obj.velocity()
 	print 'vel: [' + str(vel.x()) + ', ' + str(vel.y()) + ']'
