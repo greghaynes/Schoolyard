@@ -117,7 +117,7 @@ class Field(QtGui.QGraphicsScene):
 		return self.isRunningVal
 	def elasticCollisions(self):
 		return self.collisionFunction == self.elasticCollision
-	def setElasticCollitions(self, value):
+	def setElasticCollisions(self, value):
 		if value == True:
 			self.collisionFunction = self.elasticCollision
 		elif value == False:
@@ -155,7 +155,21 @@ class Field(QtGui.QGraphicsScene):
 			item.step(self.stepSize)
 	def elasticCollision(self, object, otherObject):
 		'Sets object to have velocity of colliding with otherObject'
-		pass
+		print 'collision'
+		masssum = object.mass + otherObject.mass
+		objmassdr = float(object.mass - otherObject.mass)/(masssum)
+		obj2mdr = (2.*otherObject.mass)/(masssum)
+		oomassdr = float(otherObject.mass - object.mass)/(masssum)
+		oo2mdr = (2.*object.mass)/(masssum)
+		# Store temp velocities because we will need them after we change their values
+		ovelx = object.velocity().x()
+		ovely = object.velocity().y()
+		oovelx = otherObject.velocity().x()
+		oovely = otherObject.velocity().y()
+		object.velocity().setX((objmassdr * ovelx) + (obj2mdr*oovelx))
+		object.velocity().setY((objmassdr * ovely) + (obj2mdr*oovely))
+		otherObject.velocity().setX((oomassdr * oovelx) + (oo2mdr*ovelx))
+		otherObject.velocity().setY((oomassdr * oovely) + (oo2mdr*ovely))
 	def inelasticCollision(self, object, otherObject):
 		if object.colliders.has_key(otherObject):
 			return

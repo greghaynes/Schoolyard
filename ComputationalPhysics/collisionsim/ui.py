@@ -134,6 +134,7 @@ class MainWindow(QtGui.QMainWindow):
 		self.toolbar.addAction(self.addObjectAction)
 		self.toolbar.addAction(self.clearAction)
 	def simulationStarted(self):
+		self.field.setElasticCollisions(True)
 		self.startSimAction.setEnabled(False)
 		self.stopSimAction.setEnabled(True)
 	def simulationEnded(self):
