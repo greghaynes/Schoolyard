@@ -111,7 +111,7 @@ class Field(QtGui.QGraphicsScene):
 		QtGui.QGraphicsScene.__init__(self, parent)
 		self.isRunningVal = False
 		self.isPausedVal = False
-		self.collisionFunction = self.inelasticCollision
+		self.collisionFunction = self.elasticCollision
 		self.stepSize = .08
 	def isRunning(self):
 		return self.isRunningVal
@@ -173,7 +173,7 @@ class Field(QtGui.QGraphicsScene):
 	def inelasticCollision(self, object, otherObject):
 		if object.colliders.has_key(otherObject):
 			return
-		print 'Collision!'
+		print 'Collision'
 		xmag = object.velocity().x() + otherObject.velocity().x()
 		ymag = object.velocity().y() + otherObject.velocity().y()
 		for update in object.colliders:

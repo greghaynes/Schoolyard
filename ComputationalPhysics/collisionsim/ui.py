@@ -103,6 +103,10 @@ class MainWindow(QtGui.QMainWindow):
 		self.clearAction = QtGui.QAction('Clear Objects', self)
 		self.clearAction.setIcon(QtGui.QIcon(':/icons/clear.png'))
 		self.connect(self.clearAction, QtCore.SIGNAL('triggered()'), self.field.clear)
+		self.elasticCollisionAction = QtGui.QAction('Elastic collisions', self)
+		self.elasticCollisionAction.setCheckable(True)
+		self.elasticCollisionAction.setChecked(True)
+		self.connect(self.elasticCollisionAction, QtCore.SIGNAL('triggered(bool)'), self.field.setElasticCollisions)
 		self.chickenExampleAction = QtGui.QAction('Chicken', self)
 		self.connect(self.chickenExampleAction, QtCore.SIGNAL('triggered()'), self.chickenExample)
 		self.ricochet3ExampleAction = QtGui.QAction('3 object ricochet', self)
@@ -123,6 +127,7 @@ class MainWindow(QtGui.QMainWindow):
 		self.editMenu = self.menuBar().addMenu('Edit')
 		self.editMenu.addAction(self.addObjectAction)
 		self.editMenu.addAction(self.clearAction)
+		self.editMenu.addAction(self.elasticCollisionAction)
 		self.exampleMenu = self.menuBar().addMenu('Examples')
 		self.exampleMenu.addAction(self.chickenExampleAction)
 		self.exampleMenu.addAction(self.ricochet3ExampleAction)
@@ -136,8 +141,8 @@ class MainWindow(QtGui.QMainWindow):
 		self.toolbar = self.addToolBar('Edit')
 		self.toolbar.addAction(self.addObjectAction)
 		self.toolbar.addAction(self.clearAction)
+		self.toolbar.addAction(self.elasticCollisionAction)
 	def simulationStarted(self):
-		self.field.setElasticCollisions(True)
 		self.startSimAction.setEnabled(False)
 		self.stopSimAction.setEnabled(True)
 	def simulationEnded(self):
