@@ -1,19 +1,26 @@
 \documentclass[a4paper,10pt]{article}
 \usepackage{cite}
+\usepackage{ifpdf}
+\usepackage{mla}
 
 \title{Modern Machine Vision}
 \author{Gregory Haynes}
 
 \begin{document}
+\begin{mla}{Gregory}{Haynes}{Prof}{Cyborg Millenium}{\today}{Modern Machine Vision}
 
-\maketitle
+\paragraph{}For decades highly intelligent robotics systems have been a dream of the future for technology enthusiasts.  Even in the 1950's science fiction authors were writing of how robots would wonder our homes, cooking meals and cleaning dishes.  Now, nearly 60 years later, this is still a dream of the distant future.  Luckilly, even without talking robots that clean our homes, we have found many uses for new technologies which greatly improve our daily lives.  Machine vision plays an important role in these technologies, but improvement in this field is required for the robotic systems we have been thinking up for decades.  This report will analyze the current state of machine vision systems and what improvements are needed or can be expected which will further the development of complex robotic systems.
 
-\section*{Topic}
-How can a machine vision system be developed which will provide functionality that rivals human vision?
+\paragraph{}Machine vision encompases all detection systems used to give a machine an ability to detect its environment.  This differs from the human definition of 'vision' in that it is not limited to just visible light detection, meaning radio frequency, and sonar based systems are also included.  Machines more frequently than not use these other forms of visual perception (non visible light) to detect their environment due to their special properties.  Barcode readers are one example, which measure the intensity of reflected light at a specific frequency to detect patterns on a surface.  Another example is auto focusing and white balancing on nearly all modern digital cameras.  Although these could still be considered primitive forms of machine vision, they have had a great impact on our daily lives.  There is still a long way to go in the development of these machine vision systems before we can find practical uses of technologies like face recognition, and assistive driving systems, but new technologies are making what used to seem like a distant dream continually more feasible.
 
-\nocite{*}
+\paragraph{}Early machine vision systems bore little or no resemblance to the modern systems we use today.  Most early systems were T.V. based and depended on analong computing devices.  Beginning in the 1960's, the U.S. military heavily funded machine vision research at M.I.T. in order to create automated systems for image inspection. \cite{UMI:BOOK}  MIT also developed a robotic arm which could be drivin by this image processing. \cite{MVI:SITE}  Several years later, IT\&T developed a system to inspect reflective surfaces for General Motors, which was one of the first commercial uses of machine vision technology. \cite{UMI:BOOK}  By the mid to late 1970's commercial use of these systems was beginning to take off, although the systems used were highly specialized to the task at hand.
+
+\paragraph{}It wasnt until 1984, when NCR created the GAPP for parallell processing aimed at image pattern recognition, that modern image processing systems began to evolve.\cite{UMI:BOOK}  Within 4 years of the GAPP, Cognex creates a chip for specifically image processing, Videk creates a 1024x1024 pixes digital camera, and LSI Logic creates a image processing system board. \cite{UMI:BOOK}  Clearly, machine vision systems had taken off in a big way.
+
+\paragraph{}
 
 \bibliography{paper}
 \bibliographystyle{IEEEannot}
 
+\end{mla}
 \end{document}
